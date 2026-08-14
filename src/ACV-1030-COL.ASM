@@ -19,6 +19,7 @@
 ;
 ; Controls:
 ;   SPACE - Cycle palette colors (random from 512-color palette)
+;   N     - Toggle NTSC/PAL timing
 ;   W     - Reset to startup screen (CGA palette, 16 bars)
 ;   A     - Cycle border color (0-15)
 ;   Q     - Draw random colored circle(ish)
