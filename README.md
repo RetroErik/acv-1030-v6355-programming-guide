@@ -22,7 +22,7 @@ The ACV-1030 is an IBM-compatible CGA adapter with a Yamaha V6355 controller. Ha
 | **Color buffer** | B800h on the maintained ACV-1030 program |
 | **Target** | 16-bit DOS COM program |
 
-This repository is intentionally focused. It contains the maintained demonstration program, the implementation source required to rebuild it, and a prebuilt COM file. Exploratory test programs, private project material, and the complete card manual transcription are not included.
+This repository is intentionally focused. It contains the maintained demonstration program as one readable ASM source file and a prebuilt COM file. Exploratory test programs, private project material, and the complete card manual transcription are not included.
 
 ## Quick Start
 
@@ -37,7 +37,7 @@ The program is intended for testing with either a CGA/TTL display or a compatibl
 Install [NASM](https://www.nasm.us/) and run this command from the repository directory:
 
 ```bash
-nasm -f bin -i src/ src/ACV-1030-COL.ASM -o bin/ACV-1030-COL.COM -l bin/ACV-1030-COL.LST
+nasm -f bin src/ACV-1030-COL.ASM -o bin/ACV-1030-COL.COM -l bin/ACV-1030-COL.LST
 ```
 
 The source targets a DOS COM environment and uses 16-bit instructions. The included COM file was assembled successfully with NASM without errors or warnings.
@@ -87,11 +87,10 @@ These are hardware observations from one test setup. Card revisions, monitors, t
 
 ## Source Files
 
-- [src/ACV-1030-COL.ASM](src/ACV-1030-COL.ASM) - maintained program configuration and controls
-- [src/ACV-1030-BAR.ASM](src/ACV-1030-BAR.ASM) - implementation included by the color program
+- [src/ACV-1030-COL.ASM](src/ACV-1030-COL.ASM) - complete maintained program source
 - [bin/ACV-1030-COL.COM](bin/ACV-1030-COL.COM) - prebuilt DOS executable
 
-The source is the authoritative reference. The COM file is included for convenient hardware testing.
+The source is the authoritative reference and can be assembled directly. The COM file is included for convenient hardware testing.
 
 ## Limitations and Safety
 
