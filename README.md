@@ -18,7 +18,9 @@ The ACV-1030 is an IBM-compatible CGA adapter with a Yamaha V6355 controller. Ha
 | **Video chip** | Yamaha V6355 |
 | **Standard mode** | 320x200, 4-color CGA mode 4 |
 | **Hidden mode** | 160x200, 16-color graphics |
-| **Color output** | Fixed IRGB on CGA/TTL; programmable palette on tested composite output |
+| **DB9 output** | CGA-compatible RGB/IRGB output with fixed color indexes |
+| **Phono output** | Composite video; PAL is monochrome in the tested setup, while NTSC provides 16 programmable colors selected from the 512-color palette |
+| **RF header** | Four-pin RF video output header; not tested |
 | **Color buffer** | B800h on the maintained ACV-1030 program |
 | **Target** | 16-bit DOS COM program |
 
@@ -30,7 +32,7 @@ This repository is intentionally focused. It contains the maintained demonstrati
 
 Download the prebuilt [ACV-1030-COL.COM](bin/ACV-1030-COL.COM) and run it on an ACV-1030-equipped DOS system.
 
-The program is intended for testing with either a CGA/TTL display or a compatible composite display. The tested composite configuration uses NTSC timing.
+The program is intended for testing with either the card's DB9 RGB/IRGB output or its phono composite output. Use the `N` key to switch between NTSC and PAL timing. In the tested setup, composite PAL output is monochrome, while composite NTSC output displays 16 programmable colors.
 
 ### Build from source
 
@@ -63,12 +65,14 @@ Palette changes are visible on composite output. CGA/TTL continues to show the f
 
 ## Confirmed Hardware Results
 
-Testing was performed on an ACV-1030 card using both relevant display paths:
+Testing was performed on an ACV-1030 card using the DB9 RGB/IRGB output and the phono composite output:
 
 - Standard CGA mode 4 works at 320x200 with four colors.
-- The hidden 160x200x16 graphics mode works on CGA/TTL output with fixed IRGB colors.
-- The same hidden mode works on composite output with NTSC timing.
-- Composite output responds to the V6355 palette writes used by the program.
+- The DB9 output displays the hidden 160x200x16 graphics mode as fixed IRGB color indexes.
+- The phono composite output is monochrome with PAL timing in the tested setup.
+- The phono composite output displays 16 programmable colors with NTSC timing.
+- The V6355 palette writes used by the program affect the NTSC composite output.
+- The four-pin RF video header has not been tested.
 - Full `0x3D*` port addresses must be written through `DX`. Immediate `OUT` forms truncate these ports to their low-byte aliases and do not produce the same extended-color behavior.
 - Both `B000h` and `B800h` reached the tested framebuffer on this card. The maintained program uses `B800h`, matching the ACV-1030 manual's color/graphics buffer description.
 
@@ -83,7 +87,7 @@ These are hardware observations from one test setup. Card revisions, monitors, t
 - **Mode unlock:** Write `0x4A` to `0x3D8` through `DX`.
 - **Pixel format:** Packed 4-bit indexes, two pixels per byte, with CGA-style interlaced rows.
 - **Palette:** 16 entries, 2 bytes per entry, written through the V6355 register-bank interface.
-- **Video paths:** CGA/TTL uses fixed IRGB output; composite output uses the tested programmable palette path.
+- **Video paths:** The DB9 output uses fixed RGB/IRGB color indexes; the phono composite output uses the tested programmable palette path in NTSC mode.
 
 ## Source Files
 
@@ -102,7 +106,7 @@ The full 512-color range has not been mapped systematically on the ACV-1030. The
 
 ## Documentation
 
-The register descriptions were transcribed from the ACV-1030 card manual and combined with original hardware testing. The manual transcription is not included in this repository. This guide summarizes only the information needed to understand and rebuild the example.
+The register descriptions were transcribed from the [ACV-1030 video card manual](ACV-1030%20video%20card.pdf) and combined with original hardware testing. The PDF is included as a reference supplied with the card. This guide summarizes only the information needed to understand and rebuild the example.
 
 ## Credits
 
