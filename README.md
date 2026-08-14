@@ -20,7 +20,7 @@ The ACV-1030 is an IBM-compatible CGA adapter with a Yamaha V6355 controller. Ha
 | **Hidden mode** | 160x200, 16-color graphics |
 | **DB9 output** | CGA-compatible RGB/IRGB output with fixed color indexes |
 | **Phono output** | Composite video; PAL is monochrome in the tested setup, while NTSC provides 16 programmable colors selected from the 512-color palette |
-| **RF header** | Four-pin RF video output header; not tested |
+| **RF header** | Four-pin optional RF-modulator header; pin 3 carries composite input to the modulator; RF output not tested |
 | **Color buffer** | B800h on the maintained ACV-1030 program |
 | **Target** | 16-bit DOS COM program |
 
@@ -63,6 +63,23 @@ Interactive demonstration of the ACV-1030 hidden 160x200x16 graphics mode.
 
 Palette changes are visible on composite output. CGA/TTL continues to show the fixed IRGB interpretation of the 16 pixel indexes.
 
+### Composite versus RF
+
+The RCA jack provides direct composite video. The manual identifies the
+four-pin `JP2` connector as the interface for an optional RF modulator:
+
+| JP2 pin | Signal |
+|---:|---|
+| 1 | `+12 V` for the external modulator |
+| 2 | Not used |
+| 3 | Composite-video signal supplied to the modulator |
+| 4 | Logic ground |
+
+If the RF-modulator assembly is not installed, `JP2` pin 3 is composite video,
+not an RF-channel output. The external modulator would convert that composite
+signal to RF. This project has tested the RCA composite output, but not the RF
+path. Take care when probing `JP2`, because pin 1 carries `+12 V`.
+
 ## Confirmed Hardware Results
 
 Testing was performed on an ACV-1030 card using the DB9 RGB/IRGB output and the phono composite output:
@@ -77,6 +94,22 @@ Testing was performed on an ACV-1030 card using the DB9 RGB/IRGB output and the 
 - Both `B000h` and `B800h` reached the tested framebuffer on this card. The maintained program uses `B800h`, matching the ACV-1030 manual's color/graphics buffer description.
 
 These are hardware observations from one test setup. Card revisions, monitors, timing standards, and output paths may produce different results.
+
+### Clock reference and PAL color
+
+The card has a `21.47727 MHz` oscillator. This is an NTSC-derived frequency:
+
+- `21.47727 MHz / 6 = 3.579545 MHz`, the NTSC color-subcarrier frequency.
+- A PAL color reference would normally be approximately `4.433618 MHz`.
+
+This suggests that the ACV-1030 is natively optimized for NTSC composite color.
+Register `0x65` can select PAL/SECAM timing, but the available hardware evidence
+does not show a separate PAL color-reference oscillator. This may explain why
+PAL mode produces a monochrome or vertically displaced image while NTSC mode
+produces color.
+
+This is a hardware hypothesis consistent with testing, not a confirmed
+description of the V6355 internal clock circuitry.
 
 ## Key Technical Facts
 
